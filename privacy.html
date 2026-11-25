@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fragrance Buddy — Privacy policy</title>
+  <style>
+    :root { --paper: #f8f6f1; --ink: #1c1b19; --ink2: #4a4640; --muted: #8a847b; --line: #e6e0d6;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color-scheme: light; }
+    @media (prefers-color-scheme: dark) { :root { --paper: #171614; --ink: #efe9df; --ink2: #c9c1b4; --muted: #8f877b; --line: #2c2925; color-scheme: dark; } }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.65 var(--sans); }
+    main { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+    h1 { font: 400 34px/1.15 var(--serif); margin: 0 0 6px; }
+    h2 { font: 400 21px/1.3 var(--serif); margin: 34px 0 8px; padding-top: 18px; border-top: 1px solid var(--line); }
+    p, li { color: var(--ink2); }
+    .muted { color: var(--muted); font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+    th, td { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+    td { color: var(--ink2); }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Privacy policy</h1>
+  <p class="muted">Fragrance Buddy (Chrome extension) · Effective November 25, 2026</p>
+
+  <p>Fragrance Buddy recommends fragrances that match your taste on the shopping sites you visit. It is built to work without accounts, tracking or our own servers. This policy explains what the extension reads, what it stores, and what leaves your browser.</p>
+
+  <h2>The short version</h2>
+  <ul>
+    <li>Your quiz answers, favorites and settings are stored only in your browser.</li>
+    <li>Shopping pages are read inside your browser to find fragrances; they are not uploaded.</li>
+    <li>Nothing is sent anywhere unless you turn on the optional AI feature with your own Anthropic API key. Then only the items listed below are sent, to Anthropic only.</li>
+    <li>We don't sell, share or monetize your data, and we don't use analytics or tracking.</li>
+  </ul>
+
+  <h2>What the extension reads</h2>
+  <p>On the supported fragrance stores listed in the extension, and on any other page where you click the Fragrance Buddy toolbar icon, the extension reads the text of the page (product names, prices, sizes and any listed fragrance notes) to recognize fragrances and score them against your taste. This happens locally in your browser. The extension does not read pages on other sites, does not read form fields, and does not record your browsing history.</p>
+
+  <h2>What is stored, and where</h2>
+  <table>
+    <tr><th>Data</th><th>Where</th><th>Why</th></tr>
+    <tr><td>Your setup-quiz answers, the notes you picked, and fragrances you rated</td><td>Your browser (chrome.storage.local)</td><td>To build your scent profile and score products</td></tr>
+    <tr><td>Your preferences (price range, concentrations, panel position, sites you turned it off on)</td><td>Your browser</td><td>To apply your filters and remember the layout</td></tr>
+    <tr><td>Your Anthropic API key, if you add one</td><td>Your browser</td><td>To make the optional AI requests on your behalf</td></tr>
+    <tr><td>Fragrance identifications returned by AI</td><td>Your browser</td><td>So each fragrance is looked up only once</td></tr>
+  </table>
+  <p>This data stays on your device. Uninstalling the extension deletes it, and the <b>Erase all answers, favorites & settings</b> button on the extension's Help page deletes it at any time.</p>
+
+  <h2>What is sent, and to whom (optional AI feature only)</h2>
+  <p>AI is off by default. If you turn it on and enter your own Anthropic API key, the extension sends requests directly from your browser to Anthropic's API (<code>api.anthropic.com</code>). We never receive them. A request contains:</p>
+  <ul>
+    <li>Names, prices, sizes and known notes of fragrance products on the page you're viewing, and the site's name and page title;</li>
+    <li>A summary of your taste: your quiz answers (including anything you typed in the optional "anything else" box), the notes you picked, and the names of fragrances you rated;</li>
+    <li>Your API key, to authenticate the request.</li>
+  </ul>
+  <p>The full page, your browsing history and any other personal information are never sent. Anthropic processes API requests under its own terms and privacy policy (<a href="https://www.anthropic.com/legal/privacy">anthropic.com/legal/privacy</a>). Because the key is yours, usage is billed to your Anthropic account.</p>
+
+  <h2>What we don't do</h2>
+  <ul>
+    <li>No analytics, advertising, tracking pixels or third-party scripts.</li>
+    <li>No selling, renting or sharing of user data.</li>
+    <li>No use of data for creditworthiness, lending or anything unrelated to recommending fragrances.</li>
+    <li>No affiliate links or changes to the stores' pages beyond showing match labels on products.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>The extension is not directed at children under 13 and does not knowingly collect information from them.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the new version will be posted here with a new effective date. Material changes will also be noted in the extension's release notes.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or requests: <a href="mailto:addison29magyar@gmail.com">addison29magyar@gmail.com</a></p>
+</main>
+</body>
+</html>
