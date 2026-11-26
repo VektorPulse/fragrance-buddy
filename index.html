@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blind Buy – Perfume &amp; Cologne Matches While You Shop</title>
+<meta name="description" content="Blind Buy is a free Chrome extension. Take a two-minute scent quiz, then see which perfumes and colognes on the store you're browsing match your taste and budget.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon32.png">
+<link rel="apple-touch-icon" href="assets/icon128.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blind Buy – Perfume & Cologne Matches While You Shop">
+<meta property="og:description" content="Know which bottle suits you before you buy. A free Chrome extension that matches fragrances to your taste on the shops you already use.">
+<meta property="og:image" content="https://vektorpulse.github.io/fragrance-buddy/assets/promo-marquee-1400x560.png">
+<meta property="og:url" content="https://vektorpulse.github.io/fragrance-buddy/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* Brand tokens shared with the extension's own pages. */
+:root {
+  --paper: #f8f6f1; --card: #fffdf9; --ink: #1c1b19; --ink2: #4a4640; --muted: #7d776e;
+  --line: #e6e0d6; --line2: #d5cdc0; --ok: #4e7a53; --ok-soft: #e7efe6;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #171614; --card: #1d1b19; --ink: #efe9df; --ink2: #c9c1b4; --muted: #9a9285;
+    --line: #2c2925; --line2: #3a3631; --ok: #8fb892; --ok-soft: #233025; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+p { margin: 0; }
+.label { font: 600 11px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* Nav */
+.nav { border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--serif); font-size: 21px; }
+.brand img { width: 30px; height: 30px; border-radius: 7px; }
+.nav-links { display: flex; gap: 22px; font-size: 14px; color: var(--ink2); }
+.nav-links a { text-decoration: none; }
+.nav-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; font: 600 15px/1 var(--sans); text-decoration: none; border: 1px solid var(--ink); border-radius: 3px; }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.secondary { background: transparent; color: var(--ink); }
+.btn.soon { cursor: default; }
+.btn small { font-weight: 400; opacity: .75; }
+
+/* Hero */
+.hero { padding-block: 64px 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.hero-text { display: flex; flex-direction: column; gap: 20px; max-width: 640px; }
+.hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.04; }
+.hero .sub { font-size: 1.15rem; color: var(--ink2); max-width: 54ch; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.fine { font-size: 13px; color: var(--muted); }
+
+.shot { border: 1px solid var(--line2); background: var(--card); border-radius: 8px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(28, 27, 25, .35); }
+.shot .chrome { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--paper); }
+.shot .chrome i { width: 10px; height: 10px; border-radius: 50%; background: var(--line2); display: block; }
+.shot .chrome span { margin-left: 10px; font-size: 12px; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px; flex: 1; max-width: 340px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Sections */
+section { padding-block: 72px; border-top: 1px solid var(--line); }
+.section-head { display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; max-width: 640px; }
+.section-head h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.12; }
+.section-head p { color: var(--ink2); }
+
+.steps { display: flex; flex-direction: column; gap: 56px; }
+.step { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px; align-items: center; }
+.step:nth-child(even) .step-text { order: 2; }
+.step-text { display: flex; flex-direction: column; gap: 12px; }
+.step-num { font-family: var(--serif); font-size: 15px; color: var(--muted); }
+.step h3 { font-size: 1.6rem; line-height: 1.2; }
+.step p { color: var(--ink2); }
+.match { align-self: flex-start; display: inline-block; font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 6px 8px; border-left: 3px solid var(--ok); }
+
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+.feature { padding: 24px 24px 24px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.feature + .feature { padding-left: 24px; }
+.feature:nth-child(3n+1) { padding-left: 0; }
+.feature:nth-child(3n+1), .feature:nth-child(3n+2) { border-right: 1px solid var(--line); }
+.feature h3 { font-size: 1.2rem; }
+.feature p { color: var(--ink2); font-size: 15px; }
+
+.stores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.store-group { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.store-group ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 15px; color: var(--ink2); }
+.any-site { margin-top: 32px; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); color: var(--ink2); }
+
+.privacy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.privacy div { display: flex; flex-direction: column; gap: 8px; }
+.privacy h3 { font-size: 1.2rem; }
+.privacy p { color: var(--ink2); font-size: 15px; }
+
+.faq { display: flex; flex-direction: column; border-top: 1px solid var(--line); max-width: 760px; }
+.faq details { border-bottom: 1px solid var(--line); padding-block: 16px; }
+.faq summary { cursor: pointer; font-family: var(--serif); font-size: 1.2rem; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--sans); color: var(--muted); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { margin-top: 10px; color: var(--ink2); max-width: 64ch; }
+
+.cta-band { text-align: left; display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+.cta-band h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px calc(28px + env(safe-area-inset-bottom)); font-size: 13px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+footer nav { display: flex; gap: 20px; }
+
+@media (max-width: 860px) {
+  .step { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .step:nth-child(even) .step-text { order: 0; }
+  .features { grid-template-columns: minmax(0, 1fr); }
+  .feature, .feature + .feature { padding: 20px 0; border-right: 0 !important; }
+  .stores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .privacy { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .nav-links a:not(.keep) { display: none; }
+  .hero { padding-block: 40px 24px; }
+  section { padding-block: 52px; }
+  .stores { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="assets/icon128.png" alt="">Blind Buy</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#stores">Stores</a>
+      <a class="keep" href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div class="hero-text">
+      <span class="label">Free Chrome extension</span>
+      <h1>Know which bottle suits you before you buy.</h1>
+      <p class="sub">Take a two-minute scent quiz. Then, on Sephora, Ulta, Nordstrom, FragranceNet and 70 other stores, Blind Buy shows which perfumes and colognes on the page match your taste and budget, and why.</p>
+      <div class="ctas">
+        <span class="btn primary soon" id="install" aria-disabled="true">Add to Chrome <small>· coming soon</small></span>
+        <a class="btn secondary" href="#how">See how it works</a>
+      </div>
+      <p class="fine">Free. No account. Your taste profile stays in your browser.</p>
+    </div>
+    <figure class="shot" style="margin: 0">
+      <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>A fragrance store · Men's cologne</span></div>
+      <img src="assets/1-store-matches.png" width="1280" height="800" alt="A fragrance store's category page with match percentages on each bottle and the Blind Buy panel listing the best matches with prices and reasons.">
+    </figure>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">How it works</span>
+        <h2>Three steps, and you never leave the store you're on</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-text">
+            <span class="step-num">Step 1</span>
+            <h3>Tell it what you like</h3>
+            <p>Six quick questions about who you shop for, when you wear fragrance and your budget. Then twelve sample scents: tap the notes that sound good, like vanilla, bergamot or oud, and skip the ones that don't. Add bottles you already love if you want.</p>
+          </div>
+          <div class="shot"><img src="assets/4-quiz-scents.png" width="1280" height="800" alt="The setup quiz showing sample scents with their notes, ready to be picked or ruled out." loading="lazy"></div>
+        </div>
+        <div class="step">
+          <div class="step-text">
+            <span class="step-num">Step 2</span>
+            <h3>Shop the way you already do</h3>
+            <p>Open any fragrance page. A small button appears in the corner and every bottle gets a match score, right on the store's own tiles. Sort by best match, lowest price or best value per millilitre.</p>
+            <span class="match">93% match</span>
+          </div>
+          <div class="shot"><img src="assets/1-store-matches.png" width="1280" height="800" alt="Match labels on a store's product grid and the Blind Buy panel with the top picks." loading="lazy"></div>
+        </div>
+        <div class="step">
+          <div class="step-text">
+            <span class="step-num">Step 3</span>
+            <h3>Get a straight answer on any bottle</h3>
+            <p>On a product page you see a clear verdict, the top, heart and base notes, how long it lasts, how far it projects, whether it fits your budget, and cheaper alternatives that smell similar.</p>
+          </div>
+          <div class="shot"><img src="assets/2-product-page.png" width="1280" height="800" alt="A product page for Aventus with Blind Buy's verdict: 90% match, notes, longevity, projection and cheaper alternatives." loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">What you get</span>
+        <h2>Fewer blind buys you regret</h2>
+      </div>
+      <div class="features">
+        <div class="feature"><h3>Reasons, not just scores</h3><p>"Has notes you picked: tobacco, vanilla, lavender." You always see why something matched.</p></div>
+        <div class="feature"><h3>Cheaper alternatives</h3><p>Expensive favorites are linked to well-known budget alternatives, including popular Middle Eastern houses like Lattafa, Armaf and Afnan.</p></div>
+        <div class="feature"><h3>Real prices</h3><p>Sale prices, price ranges and sizes are read correctly, with price per millilitre so a 3.4 oz and a 1.7 oz bottle compare fairly.</p></div>
+        <div class="feature"><h3>Filters that fit fragrance</h3><p>Price range, concentration from cologne to extrait, minimum longevity, and whether to show gift sets, minis and samples.</p></div>
+        <div class="feature"><h3>A library of about 140 scents</h3><p>Designer classics, niche favorites and budget picks, each with notes, accords, longevity and projection.</p></div>
+        <div class="feature"><h3>Gets better as you go</h3><p>Tap "Like" or "Not for me" on anything it shows you, and your matches adjust.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stores">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Where it works</span>
+        <h2>Turns on by itself at 75 fragrance stores</h2>
+      </div>
+      <div class="stores">
+        <div class="store-group">
+          <span class="label">US retailers</span>
+          <ul><li>Sephora</li><li>Ulta Beauty</li><li>Nordstrom &amp; Nordstrom Rack</li><li>Macy's</li><li>Bloomingdale's</li><li>Neiman Marcus</li><li>Saks &amp; Saks Off 5th</li><li>Dillard's, Belk, Kohl's</li><li>Target, Walmart, Costco</li><li>Amazon</li></ul>
+        </div>
+        <div class="store-group">
+          <span class="label">Discount &amp; niche</span>
+          <ul><li>FragranceNet</li><li>FragranceX</li><li>Jomashop</li><li>MaxAroma</li><li>Perfume.com</li><li>Luckyscent</li><li>Twisted Lily</li><li>Scentbird &amp; Scent Split</li><li>TJ Maxx &amp; Marshalls</li><li>Beautylish, Bluemercury</li></ul>
+        </div>
+        <div class="store-group">
+          <span class="label">Brand stores</span>
+          <ul><li>Dior, Chanel, YSL</li><li>Tom Ford, Armani</li><li>Creed, Parfums de Marly</li><li>Maison Francis Kurkdjian</li><li>Byredo, Le Labo, Diptyque</li><li>Jo Malone, Kilian</li><li>Xerjoff, Initio, Montale</li><li>Kayali, Sol de Janeiro</li><li>Lattafa, Armaf</li><li>Dossier, Glossier</li></ul>
+        </div>
+        <div class="store-group">
+          <span class="label">UK, Canada, Europe, Australia</span>
+          <ul><li>Sephora UK &amp; Canada</li><li>Boots, The Perfume Shop</li><li>Fragrance Direct, Escentual</li><li>Selfridges, Harrods</li><li>Harvey Nichols, John Lewis</li><li>Notino, LookFantastic</li><li>Douglas</li><li>Shoppers Drug Mart</li><li>Mecca, Myer, David Jones</li><li>Chemist Warehouse</li></ul>
+        </div>
+      </div>
+      <p class="any-site">On any other shop, click the Blind Buy icon in your toolbar and it reads that page too.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Privacy</span>
+        <h2>Your taste stays with you</h2>
+      </div>
+      <div class="privacy">
+        <div><h3>No account</h3><p>There's nothing to sign up for. Your quiz answers and favorites are saved in your own browser.</p></div>
+        <div><h3>No tracking</h3><p>No analytics, no tracking, and no servers of ours. Your data isn't sold or shared.</p></div>
+        <div><h3>AI only if you want it</h3><p>Optional AI picks are off by default. If you turn them on with your own Anthropic key, requests go straight from your browser to Anthropic.</p></div>
+      </div>
+      <p class="fine" style="margin-top: 24px">Read the full <a href="privacy.html">privacy policy</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="label">Questions</span>
+        <h2>Good to know</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Is it free?</summary><p>Yes. The quiz, matching, filters and badges are free.</p></details>
+        <details><summary>Which browsers does it work in?</summary><p>Chrome on a computer. It also installs from the Chrome Web Store in other Chromium browsers such as Edge, Brave and Opera. It doesn't run on phones, since mobile Chrome doesn't support extensions.</p></details>
+        <details><summary>Does it smell things for me?</summary><p>No. It compares each fragrance's notes, accords, longevity and projection with what you told it you like. That's why it's good at narrowing a page of 70 bottles down to the five worth sampling.</p></details>
+        <details><summary>What if a fragrance isn't recognized?</summary><p>Blind Buy still reads the price and size. You can add it to your favorites by hand, or turn on the optional AI lookup to identify fragrances outside the built-in library.</p></details>
+        <details><summary>Is Blind Buy connected to these stores?</summary><p>No. It's an independent tool and isn't affiliated with any retailer or fragrance brand. Brand and product names belong to their owners.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap cta-band">
+      <h2>Stop guessing. Start matching.</h2>
+      <span class="btn primary soon" aria-disabled="true">Add to Chrome <small>· coming soon</small></span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Blind Buy. Independent, not affiliated with any store or brand.</span>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy policy</a><a href="#how">How it works</a></nav>
+  </div>
+</footer>
+
+</body>
+</html>
